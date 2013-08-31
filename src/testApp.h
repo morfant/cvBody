@@ -40,8 +40,10 @@ class testApp : public ofBaseApp{
     
     //ball
     Ball*    aball;
+    Ball*    aball2;
     
     ofVec2f tVec;
+    ofVec2f tVec2;
     
     
     

@@ -15,9 +15,13 @@ void testApp::setup(){
 	threshold = 80;
     
     aball = new Ball();
+    aball2 = new Ball();
     
     tVec.x = aball->getBody()->GetPosition().x;
     tVec.y = aball->getBody()->GetPosition().y;
+
+    tVec2.x = aball2->getBody()->GetPosition().x;
+    tVec2.y = aball2->getBody()->GetPosition().y;
     
     
 }
