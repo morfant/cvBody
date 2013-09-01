@@ -1,10 +1,26 @@
+//
+//  testApp.h
+//  cvBody_001
+//
+//  Created by giy.
+//
+//
+
+// ---- Preprocessor command ----
 #pragma once
 
+// ---- Headers ----
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "World.h"
 #include "Ball.h"
 #include "Wall.h"
+
+// ---- Macros ----
+#define     OPENCV_WIDTH    1024
+#define     OPENCV_HEIGHT   768
+#define     kBLOBNUM        1
+#define     kMAX_VERTICES   8
 
 
 class testApp : public ofBaseApp{
@@ -52,6 +68,13 @@ class testApp : public ofBaseApp{
     
     // container
     vector<Ball*> balls;
+    
+    vector<ofxCvBlob> blobsVec;
+    vector<ofPoint> blobsPts;
+    vector<ofPoint> blobsPtsDiv;
+    
+    float divNum;
+    
     
     
     

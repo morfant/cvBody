@@ -3,22 +3,25 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 
+    
+    // OPEN CV
     vidGrabber.setVerbose(true);
-    vidGrabber.initGrabber(320,240);
+    vidGrabber.initGrabber(OPENCV_WIDTH, OPENCV_HEIGHT);
 
-    colorImg.allocate(320,240);
-	grayImage.allocate(320,240);
-	grayBg.allocate(320,240);
-	grayDiff.allocate(320,240);
+    colorImg.allocate(OPENCV_WIDTH, OPENCV_HEIGHT);
+	grayImage.allocate(OPENCV_WIDTH, OPENCV_HEIGHT);
+	grayBg.allocate(OPENCV_WIDTH, OPENCV_HEIGHT);
+	grayDiff.allocate(OPENCV_WIDTH, OPENCV_HEIGHT);
 
 	bLearnBakground = true;
 	threshold = 80;
     
+
     
+    // Box2D
     // Make & init containder - balls
     balls.clear();
     
-    // Box2D
     // World
     aWorld = new World();
     iWorld = aWorld -> getWorld();
@@ -31,6 +34,9 @@ void testApp::setup(){
     floor = new Wall(iWorld, b2Vec2(0, ofGetHeight()), b2Vec2(ofGetWidth(), ofGetHeight()), ofGetWidth());
     
     ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
+    
+    
+    
     
     
 }
@@ -46,7 +52,7 @@ void testApp::update(){
     
     
     // opencv update
-	ofBackground(100,100,100);
+	ofBackground(100, 100, 100);
 
     bool bNewFrame = false;
 
@@ -56,8 +62,11 @@ void testApp::update(){
 
 	if (bNewFrame){
         
+        blobsPts.clear();
+        blobsPtsDiv.clear();
+        
         // cam -> colorImg
-        colorImg.setFromPixels(vidGrabber.getPixels(), 320,240);
+        colorImg.setFromPixels(vidGrabber.getPixels(), OPENCV_WIDTH,OPENCV_HEIGHT);
 
         // with automatic change from color to grayscale.
         grayImage = colorImg;
@@ -73,7 +82,40 @@ void testApp::update(){
 
 		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayDiff, 20, (340*240)/3, 1, true);	// find holes
+		contourFinder.findContours(grayDiff, 20, (OPENCV_WIDTH*OPENCV_HEIGHT)/3, kBLOBNUM, true);	// find holes
+        
+        // get vector<ofxCvBlob>
+        blobsVec = contourFinder.blobs;
+        
+        // get blobsVec[0].pts
+        for (vector<ofxCvBlob>::iterator i = blobsVec.begin(); i != blobsVec.end(); i++) {
+            blobsPts = i[0].pts;
+        }
+        
+        divNum = blobsPts.size()/8;
+
+        cout<<"num pts of blob[0]: " << blobsPts.size() \
+        << " divNum: " << divNum << endl;
+
+        if(blobsPts.size() > 0){
+            cout << "blobsPts[0]: " << blobsPts[0].x << " / " << blobsPts[0].y << endl;
+            
+            blobsPtsDiv[0].set((float)blobsPts[0].x, (float)blobsPts[0].y, 0.f);
+
+        }
+
+//        if(blobsPts.size() > 0){
+//            
+//            blobsPtsDiv[0] = blobsPts[0];
+//
+//            for (int i = 1; i < (kMAX_VERTICES - 1); i++) {
+//                blobsPtsDiv[i] = blobsPts[divNum * i];
+//            }
+//
+//            blobsPtsDiv[kMAX_VERTICES - 1] = blobsPts[blobsPts.size() - 1];
+//        }
+
+        
 	}
 
 //    cout<<"body x: " << tVec.x << " body y: " << tVec.y << endl;
@@ -85,20 +127,28 @@ void testApp::update(){
 void testApp::draw(){
 
     
+    ofSetColor(0, 0, 255);
+    ofFill();
+    ofBeginShape();
+    ofVertices(blobsPtsDiv);
+    ofEndShape();
+    
+    
+    
     ofSetLineWidth(1.0);
     
 	// draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
-	colorImg.draw(20,20);
-	grayImage.draw(360,20);
-	grayBg.draw(20,280);
-	grayDiff.draw(360,280);
+//	colorImg.draw(20,20);
+//	grayImage.draw(360,20);
+//	grayBg.draw(20,280);
+//	grayDiff.draw(360,280);
 
 	// then draw the contours:
-
 	ofFill();
 	ofSetHexColor(0x333333);
-	ofRect(360,540,320,240);
+//	ofRect(360,540,320,240);
+	ofRect(0, 0, OPENCV_WIDTH, OPENCV_HEIGHT);
 	ofSetHexColor(0xffffff);
 
 	// we could draw the whole contour finder
@@ -110,7 +160,8 @@ void testApp::draw(){
 //    cout<<"nblobs: "<<contourFinder.nBlobs<<endl;
     
     for (int i = 0; i < contourFinder.nBlobs; i++){
-        contourFinder.blobs[i].draw(360,540);
+//        contourFinder.blobs[i].draw(360,540);
+        contourFinder.blobs[i].draw(0, 0);
         
 		
 		// draw over the centroid if the blob is a hole

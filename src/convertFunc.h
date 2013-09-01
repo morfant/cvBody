@@ -11,8 +11,6 @@
 
 // ----Headers----
 #include "ofMain.h"
-//#include "Ball.h"
-//#include "Box2D.h"
 
 // ----Define----
 #define _round2(f)      (floor(f * 100.f) / 100.f)
