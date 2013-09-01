@@ -1,9 +1,5 @@
-Hello cvBody!
+<Basic usage of git>
 
-MAKE A CHANGE AND COMMIT TEST
-
-ADD
-COMMIT
-PUSH
-
-IS RIGHT?
+git add .
+git commit -m '...... '
+git push origin master
