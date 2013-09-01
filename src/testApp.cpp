@@ -14,14 +14,32 @@ void testApp::setup(){
 	bLearnBakground = true;
 	threshold = 80;
     
-    aball = new Ball();
-    aball2 = new Ball();
     
-    tVec.x = aball->getBody()->GetPosition().x;
-    tVec.y = aball->getBody()->GetPosition().y;
+    // Box2D
+    // World
+    aWorld = new World();
+    iWorld = aWorld -> getWorld();
+    
+    // Ball
+    aBall = new Ball(iWorld);
+//    aball2 = new Ball();
+    
+//    tVec.x = aball->getBody()->GetPosition().x;
+//    tVec.y = aball->getBody()->GetPosition().y;
+//
+    
+    // Wall
+    left = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(0, ofGetHeight()), ofGetHeight());
 
-    tVec2.x = aball2->getBody()->GetPosition().x;
-    tVec2.y = aball2->getBody()->GetPosition().y;
+//    cout << "left's begin at: " << left->getBeginPoint().x << " / " << left->getBeginPoint().y << endl;
+//
+//    cout << "left's end at: " << left->getEndPoint().x << " / " << left->getEndPoint().y << endl;
+    
+    right = new Wall(iWorld, b2Vec2(ofGetWidth(), 0), b2Vec2(ofGetWidth(), ofGetHeight()), ofGetHeight());
+    
+    floor = new Wall(iWorld, b2Vec2(0, ofGetHeight()), b2Vec2(ofGetWidth(), ofGetHeight()), ofGetWidth());
+    
+    ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
     
     
 }
@@ -33,7 +51,7 @@ void testApp::update(){
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;
-    aball->getWorld()->getWorld()->Step(timeStep, velocityIterations, positionIterations);
+    iWorld->Step(timeStep, velocityIterations, positionIterations);
     
     
     // opencv update
@@ -67,7 +85,7 @@ void testApp::update(){
 		contourFinder.findContours(grayDiff, 20, (340*240)/3, 1, true);	// find holes
 	}
 
-    cout<<"body x: " << tVec.x << " body y: " << tVec.y << endl;
+//    cout<<"body x: " << tVec.x << " body y: " << tVec.y << endl;
 
     
 }
@@ -75,6 +93,9 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 
+    
+    ofSetLineWidth(1.0);
+    
 	// draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
 	colorImg.draw(20,20);
@@ -119,10 +140,21 @@ void testApp::draw(){
 			  << "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
 	ofDrawBitmapString(reportStr.str(), 20, 600);
     
+    
+    // Draw ball
     ofColor(255, 0, 0);
     ofFill();
-    aball->renderAtBodyPosition();
+    aBall->renderAtBodyPosition();
 
+    // Draw walls
+    ofColor(255, 250, 0);
+    ofNoFill();
+    left->renderAtBodyPosition();
+    right->renderAtBodyPosition();
+    floor->renderAtBodyPosition();
+    ceil->renderAtBodyPosition();
+    
+    
 }
 
 //--------------------------------------------------------------

@@ -12,10 +12,10 @@
 
 // ----Birth & Death----
 
-Ball::Ball()
+Ball::Ball(b2World* aWorld)
 {
     
-    aWorld = new World();
+    mWorld = aWorld;
     
     posX = ofGetWidth()/2;
     posY = ofGetHeight()/2;
@@ -24,8 +24,10 @@ Ball::Ball()
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
     myBodyDef.position.Set(_toWorldX(posX), _toWorldY(posY));
-	mbody = aWorld->getWorld() -> CreateBody(&myBodyDef);
+	mBody = mWorld -> CreateBody(&myBodyDef);
     
+//    cout << "addr of aWorld in Ball: " << aWorld << endl;
+
     
 	b2CircleShape myCircleShape;
 	myCircleShape.m_p.Set(0, 0);
@@ -33,8 +35,9 @@ Ball::Ball()
 	
 	b2FixtureDef myFixtureDef;
 	myFixtureDef.shape = &myCircleShape;	
-	myFixtureDef.density = 1;
-    mbody->CreateFixture(&myFixtureDef);
+	myFixtureDef.density = 1.f;
+    myFixtureDef.restitution = 0.5f;
+    mBody->CreateFixture(&myFixtureDef);
 
 	
 }
@@ -60,16 +63,16 @@ Ball::getY()
 }
 
 
-World*
+b2World*
 Ball::getWorld()
 {
-    return aWorld;
+    return mWorld;
 }
 
 b2Body*
 Ball::getBody()
 {
-    return mbody;
+    return mBody;
 
 }
 
@@ -103,7 +106,7 @@ Ball::setSecondVec()
 void
 Ball::renderAtBodyPosition()
 {
-    b2Vec2 pos = mbody->GetPosition();
+    b2Vec2 pos = mBody->GetPosition();
     
     ofPushMatrix();
     ofTranslate(_toPixelX(pos.x), _toPixelY(pos.y));
@@ -117,14 +120,7 @@ Ball::renderAtBodyPosition()
 void
 Ball::update()
 {
-    for(int i = 0; i < ourFirstVec.size(); i++){
-        if(ofDist(ourFirstVec[i].x, ourFirstVec[i].y, ourSecondVec[i].x, ourSecondVec[i].y) > 1.0){
-            ourSecondVec[i] += ((ourFirstVec[i] - ourSecondVec[i]) * kDistMulRate);
-            
-        }else{
-            ourSecondVec[i] = ourFirstVec[i];
-        }
-    }
+    
 }
 
 

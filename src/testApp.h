@@ -2,7 +2,9 @@
 
 #include "ofMain.h"
 #include "ofxOpenCv.h"
+#include "World.h"
 #include "Ball.h"
+#include "Wall.h"
 
 
 class testApp : public ofBaseApp{
@@ -36,14 +38,18 @@ class testApp : public ofBaseApp{
 		int 				threshold;
 		bool				bLearnBakground;
     
+    // World
+    World*      aWorld;
+    b2World*    iWorld;
     
-    
-    //ball
-    Ball*    aball;
-    Ball*    aball2;
+    // Ball
+    Ball*    aBall;
     
     ofVec2f tVec;
-    ofVec2f tVec2;
+    
+    // Wall
+    Wall    *left, *right, *floor, *ceil;
+    
     
     
     

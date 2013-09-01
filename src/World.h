@@ -11,7 +11,7 @@
 #include "Box2D.h"
 
 #define     GRAVITY_X       0.0
-#define     GRAVITY_Y       0.0
+#define     GRAVITY_Y       -9.8
 
 
 class World{

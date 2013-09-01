@@ -16,10 +16,6 @@
 #include "Box2D.h"
 #include "convertFunc.h"
 
-#include "World.h"
-
-#define     kDistMulRate    0.07
-
 
 // ----Class definition----
 class Ball{
@@ -42,13 +38,13 @@ protected:
 	
 	////////
 	
-	b2Body*		mbody;
-    World*      aWorld;
+	b2Body*		mBody;
+    b2World*    mWorld;
     
     
 public:
     // Birth and Death
-    Ball();
+    Ball(b2World* world);
     ~Ball();
     
     // Getter
@@ -56,7 +52,7 @@ public:
     float   getY();
     
     
-    World*      getWorld();
+    b2World*    getWorld();
     b2Body*     getBody();
     
     // Setter
