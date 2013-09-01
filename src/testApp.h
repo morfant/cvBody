@@ -32,6 +32,7 @@ class testApp : public ofBaseApp{
 		void draw();
 		
     void resetPolygonBody();
+    void makeBodyAtCvPosition(ofVec2f pos);
     
 		void keyPressed(int key);
 		void keyReleased(int key);

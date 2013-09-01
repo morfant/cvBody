@@ -21,7 +21,7 @@ void testApp::setup(){
     // Box2D
     // Make & init containder - balls
     balls.clear();
-    pBodies.clear();
+//    pBodies.clear();
     
     // World
     aWorld = new World();
@@ -37,7 +37,7 @@ void testApp::setup(){
     ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
     
     // Polygonbody
-    pBody = new PolygonBody(iWorld, kMAX_VERTICES, 0, 0);
+//    pBody = new PolygonBody(iWorld, kMAX_VERTICES, 0, 0);
     
     // vector init
     blobsPts.clear();
@@ -103,16 +103,7 @@ void testApp::update(){
 
         cout<<"num pts of blob[0]: " << blobsPts.size() \
         << " divNum: " << divNum << endl;
-
-//        if(blobsPts.size() > 0){
-//            cout << "blobsPts[0]: " << blobsPts[0].x << " / " << blobsPts[0].y << endl;
-//            
-//            blobsPtsDiv.push_back(blobsPts[0]);
-//            
-//            cout << "blobsPtsDiv[0]: " << blobsPtsDiv[0].x << " / " << blobsPtsDiv[0].y << endl;
-//
-//        }
-
+        
         if(blobsPts.size() > 0){
             b2Vec2 temp = b2Vec2(0, 0);
             temp.x = blobsPts[0].x;
@@ -217,15 +208,25 @@ void testApp::draw(){
     
     
     // Draw polygon body
-    pBody->renderAtBodyPosition();
+//    pBody->renderAtBodyPosition();
     
+    
+}
 
-//    // Draw low res polygon
-//    ofSetColor(0, 0, 255);
-//    ofFill();
-//    ofBeginShape();
-//    ofVertices(blobsPtsDiv);
-//    ofEndShape();
+void testApp::makeBodyAtCvPosition(ofVec2f pos){
+    
+    
+}
+
+void testApp::resetPolygonBody(){
+    
+    // clear b2Body
+    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
+        iWorld->DestroyBody((*iter)->getBody());
+    }
+    
+    // clear circle
+    pBodies.clear();
     
 }
 
@@ -259,17 +260,6 @@ void testApp::keyPressed(int key){
 	}
 }
 
-void testApp::resetPolygonBody(){
-
-    // clear b2Body
-    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
-        iWorld->DestroyBody((*iter)->getBody());
-    }
-    
-    // clear circle
-    pBodies.clear();
-
-}
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
