@@ -28,23 +28,14 @@ protected:
     // Size
     float   radius;
     
-    // Point
-    ofVec2f targetVec;
-    ofVec2f secondVec;
-    
-    // Path vector
-    vector<ofVec2f> ourFirstVec;
-    vector<ofVec2f> ourSecondVec;
-	
-	////////
-	
+	// Box2D
 	b2Body*		mBody;
     b2World*    mWorld;
     
     
 public:
     // Birth and Death
-    Ball(b2World* world);
+    Ball(b2World* world, float x, float y);
     ~Ball();
     
     // Getter
@@ -58,10 +49,7 @@ public:
     // Setter
     void    setX(float posX);
     void    setY(float posY);
-    
-    void    setFirstVec(ofVec2f xy);
-    void    setSecondVec();
-    
+        
     // Render
     void    renderAtBodyPosition();
     

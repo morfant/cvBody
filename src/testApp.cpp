@@ -15,25 +15,16 @@ void testApp::setup(){
 	threshold = 80;
     
     
+    // Make & init containder - balls
+    balls.clear();
+    
     // Box2D
     // World
     aWorld = new World();
     iWorld = aWorld -> getWorld();
     
-    // Ball
-    aBall = new Ball(iWorld);
-//    aball2 = new Ball();
-    
-//    tVec.x = aball->getBody()->GetPosition().x;
-//    tVec.y = aball->getBody()->GetPosition().y;
-//
-    
     // Wall
     left = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(0, ofGetHeight()), ofGetHeight());
-
-//    cout << "left's begin at: " << left->getBeginPoint().x << " / " << left->getBeginPoint().y << endl;
-//
-//    cout << "left's end at: " << left->getEndPoint().x << " / " << left->getEndPoint().y << endl;
     
     right = new Wall(iWorld, b2Vec2(ofGetWidth(), 0), b2Vec2(ofGetWidth(), ofGetHeight()), ofGetHeight());
     
@@ -144,7 +135,9 @@ void testApp::draw(){
     // Draw ball
     ofColor(255, 0, 0);
     ofFill();
-    aBall->renderAtBodyPosition();
+    for (vector<Ball*>::iterator iter = balls.begin(); iter != balls.end(); iter++) {
+        (*iter)->renderAtBodyPosition();
+    }
 
     // Draw walls
     ofColor(255, 250, 0);
@@ -172,6 +165,18 @@ void testApp::keyPressed(int key){
 			threshold --;
 			if (threshold < 0) threshold = 0;
 			break;
+
+		case 'c': // clear
+
+            // clear b2Body
+            for (vector<Ball*>::iterator iter = balls.begin(); iter != balls.end(); iter++) {
+                iWorld->DestroyBody((*iter)->getBody());
+            }
+            
+            // clear circle
+            balls.clear();
+			break;
+
 	}
 }
 
@@ -192,6 +197,9 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    
+    Ball * aBall = new Ball(iWorld, x, y);
+    balls.push_back(aBall);
 
 }
 

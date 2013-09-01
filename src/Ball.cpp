@@ -12,13 +12,15 @@
 
 // ----Birth & Death----
 
-Ball::Ball(b2World* aWorld)
+Ball::Ball(b2World* aWorld, float x, float y)
 {
     
     mWorld = aWorld;
+    posX = x;
+    posY = y;
     
-    posX = ofGetWidth()/2;
-    posY = ofGetHeight()/2;
+//    posX = ofGetWidth()/2;
+//    posY = ofGetHeight()/2;
     radius = 100.f;
     
 	b2BodyDef myBodyDef;
@@ -31,7 +33,7 @@ Ball::Ball(b2World* aWorld)
     
 	b2CircleShape myCircleShape;
 	myCircleShape.m_p.Set(0, 0);
-	myCircleShape.m_radius = _toWorldScale(radius);
+	myCircleShape.m_radius = _toWorldScale(radius/2.f);
 	
 	b2FixtureDef myFixtureDef;
 	myFixtureDef.shape = &myCircleShape;	
@@ -86,20 +88,6 @@ void
 Ball::setY(float _posY)
 {
 
-}
-
-
-void
-Ball::setFirstVec(ofVec2f _xy)
-{
-    ourFirstVec.push_back(_xy);
-
-}
-
-void
-Ball::setSecondVec()
-{
-    ourSecondVec.push_back(ourFirstVec[ourFirstVec.size() - 2]);
 }
 
 

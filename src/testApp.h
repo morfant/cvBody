@@ -40,7 +40,7 @@ class testApp : public ofBaseApp{
     
     // World
     World*      aWorld;
-    b2World*    iWorld;
+    b2World*    iWorld; //aWorld -> getWorld()
     
     // Ball
     Ball*    aBall;
@@ -49,6 +49,9 @@ class testApp : public ofBaseApp{
     
     // Wall
     Wall    *left, *right, *floor, *ceil;
+    
+    // container
+    vector<Ball*> balls;
     
     
     

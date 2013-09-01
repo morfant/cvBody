@@ -658,18 +658,26 @@
 		67347D7617D171A00023B9AE /* src */ = {
 			isa = PBXGroup;
 			children = (
-				67E8111F17D321A70094D376 /* Wall.cpp */,
-				67E8112017D321A70094D376 /* Wall.h */,
-				67347D7717D171A00023B9AE /* Ball.cpp */,
-				67347D7817D171A00023B9AE /* Ball.h */,
+				67E8112217D3341C0094D376 /* class */,
 				67347D7917D171A00023B9AE /* main.cpp */,
 				67347D7A17D171A00023B9AE /* testApp.cpp */,
 				67347D7B17D171A00023B9AE /* testApp.h */,
-				67347D7C17D171A00023B9AE /* World.cpp */,
-				67347D7D17D171A00023B9AE /* World.h */,
 				67E8111D17D31C1D0094D376 /* convertFunc.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		67E8112217D3341C0094D376 /* class */ = {
+			isa = PBXGroup;
+			children = (
+				67347D7D17D171A00023B9AE /* World.h */,
+				67347D7C17D171A00023B9AE /* World.cpp */,
+				67E8112017D321A70094D376 /* Wall.h */,
+				67E8111F17D321A70094D376 /* Wall.cpp */,
+				67347D7817D171A00023B9AE /* Ball.h */,
+				67347D7717D171A00023B9AE /* Ball.cpp */,
+			);
+			name = class;
 			sourceTree = "<group>";
 		};
 		737b033aa777b67ba4f8f4d2 /* opencv */ = {
