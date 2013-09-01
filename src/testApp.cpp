@@ -21,7 +21,7 @@ void testApp::setup(){
     // Box2D
     // Make & init containder - balls
     balls.clear();
-//    pBodies.clear();
+    pBodies.clear();
     
     // World
     aWorld = new World();
@@ -35,16 +35,10 @@ void testApp::setup(){
     floor = new Wall(iWorld, b2Vec2(0, ofGetHeight()), b2Vec2(ofGetWidth(), ofGetHeight()), ofGetWidth());
     
     ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
-    
-    // Polygonbody
-//    pBody = new PolygonBody(iWorld, kMAX_VERTICES, 0, 0);
-    
+        
     // vector init
     blobsPts.clear();
     blobsPtsDiv.clear();
-    
-    
-    
     
 }
 
@@ -94,40 +88,13 @@ void testApp::update(){
         // get vector<ofxCvBlob>
         blobsVec = contourFinder.blobs;
         
-        // get blobsVec[0].pts
-        for (vector<ofxCvBlob>::iterator i = blobsVec.begin(); i != blobsVec.end(); i++) {
-            blobsPts = i[0].pts; // vector - vector
-        }
-        
-        divNum = blobsPts.size()/8;
-
-        cout<<"num pts of blob[0]: " << blobsPts.size() \
-        << " divNum: " << divNum << endl;
-        
-        if(blobsPts.size() > 0){
-            b2Vec2 temp = b2Vec2(0, 0);
-            temp.x = blobsPts[0].x;
-            temp.y = blobsPts[0].y;
-            
-            blobsPtsDiv.push_back(temp);
-
-            for (int i = 1; i < (kMAX_VERTICES - 1); i++) {
-                b2Vec2 temp = b2Vec2(0, 0);
-                temp.x = blobsPts[divNum * i].x;
-                temp.y = blobsPts[divNum * i].y;
-                
-                blobsPtsDiv.push_back(temp);
-            }
-            temp.x = blobsPts[blobsPts.size() - 1].x;
-            temp.y = blobsPts[blobsPts.size() - 1].y;
-            
-            blobsPtsDiv.push_back(temp);
+        if(blobsVec.size() != 0){
+            cvBlobPos = blobsVec[0].centroid;
+//            cvBlobPos.y = blobsVec[0].centroid.y;
             
             if(pBodies.size() != 0) resetPolygonBody();
-            if(pBodies.size() == 0) pBody->setVertices(&(*blobsPtsDiv.begin()));
-            
+            if(pBodies.size() == 0) makeBodyAtCvPosition();
         }
-
         
 	}
     
@@ -140,10 +107,9 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 
-    
-    
-    
+    // Set basic draw options
     ofSetLineWidth(1.0);
+    ofSetRectMode(OF_RECTMODE_CORNER);
     
 	// draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
@@ -205,6 +171,14 @@ void testApp::draw(){
     right->renderAtBodyPosition();
     floor->renderAtBodyPosition();
     ceil->renderAtBodyPosition();
+
+    
+    // Draw body at cv pos
+    ofColor(0, 255, 0);
+    ofFill();
+    for (vector<Box*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
+        (*iter)->renderAtBodyPosition();
+    }
     
     
     // Draw polygon body
@@ -213,15 +187,17 @@ void testApp::draw(){
     
 }
 
-void testApp::makeBodyAtCvPosition(ofVec2f pos){
+void testApp::makeBodyAtCvPosition(){
     
+    Box * aBox = new Box(iWorld, cvBlobPos.x, cvBlobPos.y);
+    pBodies.push_back(aBox);
     
 }
 
 void testApp::resetPolygonBody(){
     
     // clear b2Body
-    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
+    for (vector<Box*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
         iWorld->DestroyBody((*iter)->getBody());
     }
     

@@ -19,17 +19,13 @@ Ball::Ball(b2World* aWorld, float x, float y)
     posX = x;
     posY = y;
     
-//    posX = ofGetWidth()/2;
-//    posY = ofGetHeight()/2;
-    radius = 10.f;
+    radius = 50.f;
     
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
     myBodyDef.position.Set(_toWorldX(posX), _toWorldY(posY));
 	mBody = mWorld -> CreateBody(&myBodyDef);
     
-//    cout << "addr of aWorld in Ball: " << aWorld << endl;
-
     
 	b2CircleShape myCircleShape;
 	myCircleShape.m_p.Set(0, 0);
@@ -38,7 +34,8 @@ Ball::Ball(b2World* aWorld, float x, float y)
 	b2FixtureDef myFixtureDef;
 	myFixtureDef.shape = &myCircleShape;	
 	myFixtureDef.density = 1.f;
-    myFixtureDef.restitution = 0.5f;
+    myFixtureDef.restitution = 0.9f;
+    myFixtureDef.friction = 0.7f;
     mBody->CreateFixture(&myFixtureDef);
 
 	
@@ -96,10 +93,10 @@ Ball::renderAtBodyPosition()
 {
     b2Vec2 pos = mBody->GetPosition();
     
+    ofSetColor(255, 255, 0);
     ofPushMatrix();
     ofTranslate(_toPixelX(pos.x), _toPixelY(pos.y));
     ofEllipse(0, 0, radius, radius);
-//    ofCircle(0, 0, radius);
     ofPopMatrix();
 }
 

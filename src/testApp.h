@@ -16,6 +16,7 @@
 #include "Ball.h"
 #include "Wall.h"
 #include "PolygonBody.h"
+#include "Box.h"
 
 // ---- Macros ----
 #define     OPENCV_WIDTH    1024
@@ -32,7 +33,7 @@ class testApp : public ofBaseApp{
 		void draw();
 		
     void resetPolygonBody();
-    void makeBodyAtCvPosition(ofVec2f pos);
+    void makeBodyAtCvPosition();
     
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -46,7 +47,6 @@ class testApp : public ofBaseApp{
 
         ofVideoGrabber 		vidGrabber;
 
-
         ofxCvColorImage			colorImg;
 
         ofxCvGrayscaleImage 	grayImage;
@@ -57,6 +57,8 @@ class testApp : public ofBaseApp{
 
 		int 				threshold;
 		bool				bLearnBakground;
+    
+    ofVec2f             cvBlobPos;
     
     // World
     World*      aWorld;
@@ -72,7 +74,7 @@ class testApp : public ofBaseApp{
     
     // container
     vector<Ball*> balls;
-    vector<PolygonBody*> pBodies;
+    vector<Box*> pBodies;
     
     vector<ofxCvBlob> blobsVec;
     vector<ofPoint> blobsPts;
@@ -80,8 +82,8 @@ class testApp : public ofBaseApp{
     
     float divNum;
     
-    // Polygon body
-    PolygonBody*    pBody;
+    // Polygon body at CV pos
+//    Ball*    pBody;
     
     
     
