@@ -60,6 +60,7 @@
 		67347D7F17D171A00023B9AE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67347D7917D171A00023B9AE /* main.cpp */; };
 		67347D8017D171A00023B9AE /* testApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67347D7A17D171A00023B9AE /* testApp.cpp */; };
 		67347D8117D171A00023B9AE /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67347D7C17D171A00023B9AE /* World.cpp */; };
+		6780BE0517D36759006095C4 /* PolygonBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6780BE0317D36759006095C4 /* PolygonBody.cpp */; };
 		67E8112117D321A70094D376 /* Wall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67E8111F17D321A70094D376 /* Wall.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -244,6 +245,8 @@
 		67347D7B17D171A00023B9AE /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		67347D7C17D171A00023B9AE /* World.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = World.cpp; sourceTree = "<group>"; };
 		67347D7D17D171A00023B9AE /* World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = World.h; sourceTree = "<group>"; };
+		6780BE0317D36759006095C4 /* PolygonBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolygonBody.cpp; sourceTree = "<group>"; };
+		6780BE0417D36759006095C4 /* PolygonBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolygonBody.h; sourceTree = "<group>"; };
 		67E8111D17D31C1D0094D376 /* convertFunc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = convertFunc.h; sourceTree = "<group>"; };
 		67E8111F17D321A70094D376 /* Wall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Wall.cpp; sourceTree = "<group>"; };
 		67E8112017D321A70094D376 /* Wall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wall.h; sourceTree = "<group>"; };
@@ -670,6 +673,8 @@
 		67E8112217D3341C0094D376 /* class */ = {
 			isa = PBXGroup;
 			children = (
+				6780BE0417D36759006095C4 /* PolygonBody.h */,
+				6780BE0317D36759006095C4 /* PolygonBody.cpp */,
 				67347D7D17D171A00023B9AE /* World.h */,
 				67347D7C17D171A00023B9AE /* World.cpp */,
 				67E8112017D321A70094D376 /* Wall.h */,
@@ -1042,6 +1047,7 @@
 				67347D8017D171A00023B9AE /* testApp.cpp in Sources */,
 				67347D8117D171A00023B9AE /* World.cpp in Sources */,
 				67E8112117D321A70094D376 /* Wall.cpp in Sources */,
+				6780BE0517D36759006095C4 /* PolygonBody.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

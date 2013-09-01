@@ -21,7 +21,7 @@ Ball::Ball(b2World* aWorld, float x, float y)
     
 //    posX = ofGetWidth()/2;
 //    posY = ofGetHeight()/2;
-    radius = 100.f;
+    radius = 10.f;
     
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;

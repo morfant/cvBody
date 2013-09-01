@@ -15,6 +15,7 @@
 #include "World.h"
 #include "Ball.h"
 #include "Wall.h"
+#include "PolygonBody.h"
 
 // ---- Macros ----
 #define     OPENCV_WIDTH    1024
@@ -30,6 +31,8 @@ class testApp : public ofBaseApp{
 		void update();
 		void draw();
 		
+    void resetPolygonBody();
+    
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -68,12 +71,16 @@ class testApp : public ofBaseApp{
     
     // container
     vector<Ball*> balls;
+    vector<PolygonBody*> pBodies;
     
     vector<ofxCvBlob> blobsVec;
     vector<ofPoint> blobsPts;
-    vector<ofPoint> blobsPtsDiv;
+    vector<b2Vec2> blobsPtsDiv;
     
     float divNum;
+    
+    // Polygon body
+    PolygonBody*    pBody;
     
     
     

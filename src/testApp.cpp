@@ -21,6 +21,7 @@ void testApp::setup(){
     // Box2D
     // Make & init containder - balls
     balls.clear();
+    pBodies.clear();
     
     // World
     aWorld = new World();
@@ -35,6 +36,8 @@ void testApp::setup(){
     
     ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
     
+    // Polygonbody
+    pBody = new PolygonBody(iWorld, kMAX_VERTICES, 0, 0);
     
     // vector init
     blobsPts.clear();
@@ -111,18 +114,32 @@ void testApp::update(){
 //        }
 
         if(blobsPts.size() > 0){
+            b2Vec2 temp = b2Vec2(0, 0);
+            temp.x = blobsPts[0].x;
+            temp.y = blobsPts[0].y;
             
-            blobsPtsDiv.push_back(blobsPts[0]);
+            blobsPtsDiv.push_back(temp);
 
             for (int i = 1; i < (kMAX_VERTICES - 1); i++) {
-                blobsPtsDiv.push_back(blobsPts[divNum * i]);
+                b2Vec2 temp = b2Vec2(0, 0);
+                temp.x = blobsPts[divNum * i].x;
+                temp.y = blobsPts[divNum * i].y;
+                
+                blobsPtsDiv.push_back(temp);
             }
-
-            blobsPtsDiv.push_back(blobsPts[blobsPts.size() - 1]);
+            temp.x = blobsPts[blobsPts.size() - 1].x;
+            temp.y = blobsPts[blobsPts.size() - 1].y;
+            
+            blobsPtsDiv.push_back(temp);
+            
+            if(pBodies.size() != 0) resetPolygonBody();
+            if(pBodies.size() == 0) pBody->setVertices(&(*blobsPtsDiv.begin()));
+            
         }
 
         
 	}
+    
 
 //    cout<<"body x: " << tVec.x << " body y: " << tVec.y << endl;
 
@@ -198,13 +215,17 @@ void testApp::draw(){
     floor->renderAtBodyPosition();
     ceil->renderAtBodyPosition();
     
+    
+    // Draw polygon body
+    pBody->renderAtBodyPosition();
+    
 
-    // Draw low res polygon
-    ofSetColor(0, 0, 255);
-    ofFill();
-    ofBeginShape();
-    ofVertices(blobsPtsDiv);
-    ofEndShape();
+//    // Draw low res polygon
+//    ofSetColor(0, 0, 255);
+//    ofFill();
+//    ofBeginShape();
+//    ofVertices(blobsPtsDiv);
+//    ofEndShape();
     
 }
 
@@ -236,6 +257,18 @@ void testApp::keyPressed(int key){
 			break;
 
 	}
+}
+
+void testApp::resetPolygonBody(){
+
+    // clear b2Body
+    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
+        iWorld->DestroyBody((*iter)->getBody());
+    }
+    
+    // clear circle
+    pBodies.clear();
+
 }
 
 //--------------------------------------------------------------
