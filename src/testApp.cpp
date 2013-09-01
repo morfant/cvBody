@@ -36,6 +36,10 @@ void testApp::setup(){
     ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
     
     
+    // vector init
+    blobsPts.clear();
+    blobsPtsDiv.clear();
+    
     
     
     
@@ -89,7 +93,7 @@ void testApp::update(){
         
         // get blobsVec[0].pts
         for (vector<ofxCvBlob>::iterator i = blobsVec.begin(); i != blobsVec.end(); i++) {
-            blobsPts = i[0].pts;
+            blobsPts = i[0].pts; // vector - vector
         }
         
         divNum = blobsPts.size()/8;
@@ -97,23 +101,25 @@ void testApp::update(){
         cout<<"num pts of blob[0]: " << blobsPts.size() \
         << " divNum: " << divNum << endl;
 
-        if(blobsPts.size() > 0){
-            cout << "blobsPts[0]: " << blobsPts[0].x << " / " << blobsPts[0].y << endl;
-            
-            blobsPtsDiv[0].set((float)blobsPts[0].x, (float)blobsPts[0].y, 0.f);
-
-        }
-
 //        if(blobsPts.size() > 0){
+//            cout << "blobsPts[0]: " << blobsPts[0].x << " / " << blobsPts[0].y << endl;
 //            
-//            blobsPtsDiv[0] = blobsPts[0];
+//            blobsPtsDiv.push_back(blobsPts[0]);
+//            
+//            cout << "blobsPtsDiv[0]: " << blobsPtsDiv[0].x << " / " << blobsPtsDiv[0].y << endl;
 //
-//            for (int i = 1; i < (kMAX_VERTICES - 1); i++) {
-//                blobsPtsDiv[i] = blobsPts[divNum * i];
-//            }
-//
-//            blobsPtsDiv[kMAX_VERTICES - 1] = blobsPts[blobsPts.size() - 1];
 //        }
+
+        if(blobsPts.size() > 0){
+            
+            blobsPtsDiv.push_back(blobsPts[0]);
+
+            for (int i = 1; i < (kMAX_VERTICES - 1); i++) {
+                blobsPtsDiv.push_back(blobsPts[divNum * i]);
+            }
+
+            blobsPtsDiv.push_back(blobsPts[blobsPts.size() - 1]);
+        }
 
         
 	}
@@ -126,12 +132,6 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 
-    
-    ofSetColor(0, 0, 255);
-    ofFill();
-    ofBeginShape();
-    ofVertices(blobsPtsDiv);
-    ofEndShape();
     
     
     
@@ -198,6 +198,13 @@ void testApp::draw(){
     floor->renderAtBodyPosition();
     ceil->renderAtBodyPosition();
     
+
+    // Draw low res polygon
+    ofSetColor(0, 0, 255);
+    ofFill();
+    ofBeginShape();
+    ofVertices(blobsPtsDiv);
+    ofEndShape();
     
 }
 
