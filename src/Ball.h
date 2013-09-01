@@ -14,6 +14,7 @@
 #include <iostream>
 #include "ofMain.h"
 #include "Box2D.h"
+#include "convertFunc.h"
 
 #include "World.h"
 
@@ -41,8 +42,8 @@ protected:
 	
 	////////
 	
-	b2Body*		m_body;
-    World*       m_world;
+	b2Body*		mbody;
+    World*      aWorld;
     
     
 public:
@@ -64,7 +65,10 @@ public:
     
     void    setFirstVec(ofVec2f xy);
     void    setSecondVec();
-        
+    
+    // Render
+    void    renderAtBodyPosition();
+    
     // Update & draw
     void    update();
     void    draw();

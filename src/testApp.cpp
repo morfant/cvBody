@@ -118,6 +118,10 @@ void testApp::draw(){
 			  << "threshold " << threshold << " (press: +/-)" << endl
 			  << "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
 	ofDrawBitmapString(reportStr.str(), 20, 600);
+    
+    ofColor(255, 0, 0);
+    ofFill();
+    aball->renderAtBodyPosition();
 
 }
 

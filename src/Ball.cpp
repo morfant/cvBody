@@ -15,26 +15,26 @@
 Ball::Ball()
 {
     
-    m_world = new World();
+    aWorld = new World();
     
     posX = ofGetWidth()/2;
     posY = ofGetHeight()/2;
-    radius = 1.f;
+    radius = 100.f;
     
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
-    myBodyDef.position.Set(0, 0);
-	m_body = m_world->getWorld() -> CreateBody(&myBodyDef);
+    myBodyDef.position.Set(_toWorldX(posX), _toWorldY(posY));
+	mbody = aWorld->getWorld() -> CreateBody(&myBodyDef);
     
     
 	b2CircleShape myCircleShape;
-	myCircleShape.m_p.Set(posX, posY);
-	myCircleShape.m_radius = radius;
+	myCircleShape.m_p.Set(0, 0);
+	myCircleShape.m_radius = _toWorldScale(radius);
 	
 	b2FixtureDef myFixtureDef;
 	myFixtureDef.shape = &myCircleShape;	
 	myFixtureDef.density = 1;
-    m_body->CreateFixture(&myFixtureDef);
+    mbody->CreateFixture(&myFixtureDef);
 
 	
 }
@@ -63,13 +63,13 @@ Ball::getY()
 World*
 Ball::getWorld()
 {
-    return m_world;
+    return aWorld;
 }
 
 b2Body*
 Ball::getBody()
 {
-    return m_body;
+    return mbody;
 
 }
 
@@ -97,6 +97,19 @@ void
 Ball::setSecondVec()
 {
     ourSecondVec.push_back(ourFirstVec[ourFirstVec.size() - 2]);
+}
+
+
+void
+Ball::renderAtBodyPosition()
+{
+    b2Vec2 pos = mbody->GetPosition();
+    
+    ofPushMatrix();
+    ofTranslate(_toPixelX(pos.x), _toPixelY(pos.y));
+    ofEllipse(0, 0, radius, radius);
+//    ofCircle(0, 0, radius);
+    ofPopMatrix();
 }
 
 
