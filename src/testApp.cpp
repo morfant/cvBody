@@ -81,27 +81,17 @@ void testApp::update(){
 		grayDiff.absDiff(grayBg, grayImage);
 		grayDiff.threshold(threshold);
 
-		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayDiff, 20, (OPENCV_WIDTH*OPENCV_HEIGHT)/3, kBLOBNUM, true);	// find holes
+		contourFinder.findContours(grayDiff, kMIN_BLOBAREA, (OPENCV_WIDTH*OPENCV_HEIGHT)/3, kBLOBNUM, true);	// find holes
         
         // get vector<ofxCvBlob>
         blobsVec = contourFinder.blobs;
         
         if(blobsVec.size() != 0){
-            cvBlobPos = blobsVec[0].centroid;
-//            cvBlobPos.y = blobsVec[0].centroid.y;
-            
+            cvBlobPos = blobsVec[0].centroid;            
             if(pBodies.size() != 0) resetPolygonBody();
             if(pBodies.size() == 0) makeBodyAtCvPosition();
         }
-        
 	}
-    
-
-//    cout<<"body x: " << tVec.x << " body y: " << tVec.y << endl;
-
-    
 }
 
 //--------------------------------------------------------------

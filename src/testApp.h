@@ -19,11 +19,13 @@
 #include "Box.h"
 
 // ---- Macros ----
-#define     OPENCV_WIDTH    1024
-#define     OPENCV_HEIGHT   768
-#define     kBLOBNUM        1
-#define     kMAX_VERTICES   8
-
+enum {
+    OPENCV_WIDTH = 1024,
+    OPENCV_HEIGHT = 768,
+    kBLOBNUM = 1,
+    kMAX_VERTICES = 8,
+    kMIN_BLOBAREA = 300
+};
 
 class testApp : public ofBaseApp{
 
