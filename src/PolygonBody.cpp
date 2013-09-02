@@ -12,7 +12,7 @@
 
 // ----Birth & Death----
 
-PolygonBody::PolygonBody(b2World* aWorld, int maxVCount, float x, float y)
+PolygonBody::PolygonBody(b2World* aWorld, b2Vec2* vertices, int maxVCount, float x, float y)
 {
     
     mWorld = aWorld;
@@ -20,16 +20,17 @@ PolygonBody::PolygonBody(b2World* aWorld, int maxVCount, float x, float y)
     posY = y;
     maxVertexCount = maxVCount;
     
-    // Init mPts
-    mPts[0] = b2Vec2(0, 0);
-    for (int i = 1; i < maxVertexCount - 1; i++) {
-        mPts[i] = b2Vec2(i, i);
+    for (int i = 0; i < maxVertexCount; i++) {
+        mPts[i].x = _toWorldX(vertices[i].x);
+        mPts[i].y = _toWorldY(vertices[i].y);
     }
-    mPts[maxVertexCount - 1] = b2Vec2(0, 7);
     
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
-    myBodyDef.position.Set(_toWorldX(posX), _toWorldY(posY));
+//    myBodyDef.position.Set(_toWorldX(posX/2.f), _toWorldY(posY/2.f));
+    
+    myBodyDef.position.Set(0, 0);
+    
 	mBody = mWorld -> CreateBody(&myBodyDef);
     
 	b2PolygonShape myPolygonShape;
@@ -52,6 +53,22 @@ PolygonBody::~PolygonBody()
 
 
 // getter & setter
+float
+PolygonBody::getArea(b2Vec2* vertices, int maxVCount)
+{
+        int i,j;
+        double area = 0;
+        
+        for (i = 0; i < maxVCount; i++) {
+            j = (i + 1) % maxVCount;
+            area += vertices[i].x * vertices[j].y;
+            area -= vertices[i].y * vertices[j].x;
+        }
+        
+        area /= 2;
+        return(area < 0 ? -area : area);
+}
+
 float
 PolygonBody::getX()
 {
@@ -95,8 +112,8 @@ void
 PolygonBody::setVertices(b2Vec2* vertices)
 {
     for (int i = 0; i < maxVertexCount; i++) {
-        mPts[i].x = _toWorldX(vertices[i].x)/2.f;
-        mPts[i].y = _toWorldY(vertices[i].y)/2.f;
+        mPts[i].x = _toWorldX(vertices[i].x);
+        mPts[i].y = _toWorldY(vertices[i].y);
     }
     
     
@@ -119,8 +136,9 @@ PolygonBody::renderAtBodyPosition()
 {
     b2Vec2 pos = mBody->GetPosition();
     
+    ofSetColor(0, 200, 255);
     ofPushMatrix();
-    ofTranslate(_toPixelX(pos.x), _toPixelY(pos.y));
+//    ofTranslate(_toPixelX(pos.x), _toPixelY(pos.y));
     ofBeginShape();
 
     for (int i = 0; i < maxVertexCount; i++) {

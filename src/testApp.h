@@ -16,13 +16,16 @@
 #include "Ball.h"
 #include "Wall.h"
 #include "PolygonBody.h"
+#include "Box.h"
 
 // ---- Macros ----
-#define     OPENCV_WIDTH    1024
-#define     OPENCV_HEIGHT   768
-#define     kBLOBNUM        1
-#define     kMAX_VERTICES   8
-
+enum {
+    OPENCV_WIDTH = 1024,
+    OPENCV_HEIGHT = 768,
+    kBLOBNUM = 1,
+    kMAX_VERTICES = 8,
+    kMIN_BLOBAREA = 10000
+};
 
 class testApp : public ofBaseApp{
 
@@ -32,6 +35,8 @@ class testApp : public ofBaseApp{
 		void draw();
 		
     void resetPolygonBody();
+    void makeBodyAtCvPosition();
+    float getArea(b2Vec2* vertices, int maxVCount);
     
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -45,7 +50,6 @@ class testApp : public ofBaseApp{
 
         ofVideoGrabber 		vidGrabber;
 
-
         ofxCvColorImage			colorImg;
 
         ofxCvGrayscaleImage 	grayImage;
@@ -56,6 +60,8 @@ class testApp : public ofBaseApp{
 
 		int 				threshold;
 		bool				bLearnBakground;
+    
+    ofVec2f             cvBlobPos;
     
     // World
     World*      aWorld;
@@ -76,15 +82,9 @@ class testApp : public ofBaseApp{
     vector<ofxCvBlob> blobsVec;
     vector<ofPoint> blobsPts;
     vector<b2Vec2> blobsPtsDiv;
+    vector<b2Vec2> rBlobsPtsDiv;
     
     float divNum;
-    
-    // Polygon body
-    PolygonBody*    pBody;
-    
-    
-    
-    
     
 
 

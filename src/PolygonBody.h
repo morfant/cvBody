@@ -36,11 +36,12 @@ protected:
     
 public:
     // Birth and Death
-    PolygonBody(b2World* world, int maxVCount, float x, float y);
+    PolygonBody(b2World* world, b2Vec2* vertices, int maxVCount, float x, float y);
     
     ~PolygonBody();
     
     // Getter
+    float   getArea(b2Vec2* vertices, int maxVCount);
     float   getX();
     float   getY();
     
