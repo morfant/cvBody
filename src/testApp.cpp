@@ -35,17 +35,11 @@ void testApp::setup(){
     floor = new Wall(iWorld, b2Vec2(0, ofGetHeight()), b2Vec2(ofGetWidth(), ofGetHeight()), ofGetWidth());
     
     ceil = new Wall(iWorld, b2Vec2(0, 0), b2Vec2(ofGetWidth(), 0), ofGetWidth());
-    
-    // Polygonbody
-    pBody = new PolygonBody(iWorld, kMAX_VERTICES, 0, 0);
-    
+        
     // vector init
     blobsPts.clear();
     blobsPtsDiv.clear();
-    
-    
-    
-    
+        
 }
 
 //--------------------------------------------------------------
@@ -69,8 +63,6 @@ void testApp::update(){
 
 	if (bNewFrame){
         
-        blobsPts.clear();
-        blobsPtsDiv.clear();
         
         // cam -> colorImg
         colorImg.setFromPixels(vidGrabber.getPixels(), OPENCV_WIDTH,OPENCV_HEIGHT);
@@ -87,72 +79,56 @@ void testApp::update(){
 		grayDiff.absDiff(grayBg, grayImage);
 		grayDiff.threshold(threshold);
 
-		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayDiff, 20, (OPENCV_WIDTH*OPENCV_HEIGHT)/3, kBLOBNUM, true);	// find holes
+		contourFinder.findContours(grayDiff, kMIN_BLOBAREA, (OPENCV_WIDTH*OPENCV_HEIGHT)/3, kBLOBNUM, true);	// find holes
+        
+        
+        blobsVec.clear();
+        blobsPts.clear();
+        blobsPtsDiv.clear();
+        rBlobsPtsDiv.clear();
         
         // get vector<ofxCvBlob>
         blobsVec = contourFinder.blobs;
         
-        // get blobsVec[0].pts
-        for (vector<ofxCvBlob>::iterator i = blobsVec.begin(); i != blobsVec.end(); i++) {
-            blobsPts = i[0].pts; // vector - vector
+        if(blobsVec.size() != 0){
+            blobsPts = blobsVec[0].pts;
+            cvBlobPos = blobsVec[0].centroid;
         }
-        
-        divNum = blobsPts.size()/8;
-
-        cout<<"num pts of blob[0]: " << blobsPts.size() \
-        << " divNum: " << divNum << endl;
-
-//        if(blobsPts.size() > 0){
-//            cout << "blobsPts[0]: " << blobsPts[0].x << " / " << blobsPts[0].y << endl;
-//            
-//            blobsPtsDiv.push_back(blobsPts[0]);
-//            
-//            cout << "blobsPtsDiv[0]: " << blobsPtsDiv[0].x << " / " << blobsPtsDiv[0].y << endl;
-//
-//        }
-
         if(blobsPts.size() > 0){
+            divNum = blobsPts.size()/kMAX_VERTICES;
+            
+            // Make blobsPtsDiv
             b2Vec2 temp = b2Vec2(0, 0);
             temp.x = blobsPts[0].x;
             temp.y = blobsPts[0].y;
             
             blobsPtsDiv.push_back(temp);
-
+        
             for (int i = 1; i < (kMAX_VERTICES - 1); i++) {
                 b2Vec2 temp = b2Vec2(0, 0);
                 temp.x = blobsPts[divNum * i].x;
                 temp.y = blobsPts[divNum * i].y;
-                
                 blobsPtsDiv.push_back(temp);
             }
+        
             temp.x = blobsPts[blobsPts.size() - 1].x;
             temp.y = blobsPts[blobsPts.size() - 1].y;
-            
+
             blobsPtsDiv.push_back(temp);
             
             if(pBodies.size() != 0) resetPolygonBody();
-            if(pBodies.size() == 0) pBody->setVertices(&(*blobsPtsDiv.begin()));
+            if(pBodies.size() == 0) makeBodyAtCvPosition();
             
         }
-
-        
 	}
-    
-
-//    cout<<"body x: " << tVec.x << " body y: " << tVec.y << endl;
-
-    
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
 
-    
-    
-    
+    // Set basic draw options
     ofSetLineWidth(1.0);
+    ofSetRectMode(OF_RECTMODE_CORNER);
     
 	// draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
@@ -214,18 +190,60 @@ void testApp::draw(){
     right->renderAtBodyPosition();
     floor->renderAtBodyPosition();
     ceil->renderAtBodyPosition();
-    
-    
-    // Draw polygon body
-    pBody->renderAtBodyPosition();
-    
 
-//    // Draw low res polygon
-//    ofSetColor(0, 0, 255);
-//    ofFill();
-//    ofBeginShape();
-//    ofVertices(blobsPtsDiv);
-//    ofEndShape();
+    
+    // Draw body at cv pos
+    ofColor(0, 255, 0);
+    ofFill();
+    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
+        (*iter)->renderAtBodyPosition();
+    }
+    
+    
+    
+}
+
+void testApp::makeBodyAtCvPosition(){
+
+    for (vector<b2Vec2>::iterator ir = blobsPtsDiv.end(); ir != blobsPtsDiv.begin(); ir--) {
+        rBlobsPtsDiv.push_back(*(ir));
+    }
+    
+    cout << "b[0] / r[7] " << blobsPtsDiv[0].x << " / " << rBlobsPtsDiv[7].x << endl;
+    
+    
+    if(getArea(&blobsPtsDiv[0], kMAX_VERTICES) > 0){
+        PolygonBody * aPbody = new PolygonBody(iWorld, &blobsPtsDiv[0], kMAX_VERTICES, cvBlobPos.x, cvBlobPos.y);
+        pBodies.push_back(aPbody);
+    }
+    
+}
+
+void testApp::resetPolygonBody(){
+    
+    // clear b2Body
+    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
+        iWorld->DestroyBody((*iter)->getBody());
+    }
+    
+    // clear circle
+    pBodies.clear();
+    
+}
+
+float testApp::getArea(b2Vec2* vertices, int maxVCount){
+
+    int i,j;
+    double area = 0;
+    
+    for (i = 0; i < maxVCount; i++) {
+        j = (i + 1) % maxVCount;
+        area += vertices[i].x * vertices[j].y;
+        area -= vertices[i].y * vertices[j].x;
+    }
+    
+    area /= 2;
+    return(area < 0 ? -area : area);
     
 }
 
@@ -259,17 +277,6 @@ void testApp::keyPressed(int key){
 	}
 }
 
-void testApp::resetPolygonBody(){
-
-    // clear b2Body
-    for (vector<PolygonBody*>::iterator iter = pBodies.begin(); iter != pBodies.end(); iter++) {
-        iWorld->DestroyBody((*iter)->getBody());
-    }
-    
-    // clear circle
-    pBodies.clear();
-
-}
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
@@ -283,14 +290,14 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-
+    Ball * aBall = new Ball(iWorld, x, y);
+    balls.push_back(aBall);
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
     
-    Ball * aBall = new Ball(iWorld, x, y);
-    balls.push_back(aBall);
+
 
 }
 
