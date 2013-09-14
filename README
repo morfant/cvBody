@@ -3,3 +3,11 @@
 git add .
 git commit -m '...... '
 git push origin master
+
+
+Branch 'master'
+: Trying to make a Box2D polygon body at Cv position.
+: But there is some Box2D issue about minimum area(?).
+
+Branch 'aBodyInCvPos'
+: Make a Box2D box at Cv centroid position.
